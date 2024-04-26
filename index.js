@@ -1,15 +1,34 @@
 const express = require("express");
+const { exec } = require("child_process");
 
-// Create an Express application
 const app = express();
-const PORT = 5678;
+const port = 5678;
 
-// Define a route to say hello
+app.use(express.json());
+
 app.get("/", (req, res) => {
-  res.send("Hello from your Express REST API!");
+  res.send("Xin chao");
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.post("/webhook", (req, res) => {
+  console.log("Received a webhook event from GitHub");
+
+  // Thực hiện pull code mới từ repository
+  exec("git pull origin main", (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error during pull: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`Error: ${stderr}`);
+      return;
+    }
+    console.log(`Code pulled successfully: ${stdout}`);
+  });
+
+  res.sendStatus(200);
+});
+
+app.listen(port, () => {
+  console.log(`Webhook server listening at http://localhost:${port}`);
 });
