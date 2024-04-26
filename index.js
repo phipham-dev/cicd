@@ -7,7 +7,7 @@ const port = 5678;
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Xin chao");
+  res.send("Xin chao VN");
 });
 
 app.post("/webhook", (req, res) => {
